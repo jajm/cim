@@ -1,0 +1,11 @@
+CIM - C Improved
+================
+
+cim is a C library that provides high level features to C.
+
+Requirements
+============
+
+cim requires the following libraries:
+* embody (>= 1.2)
+* sds

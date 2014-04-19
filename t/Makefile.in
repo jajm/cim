@@ -1,0 +1,18 @@
+include ../config.mk
+
+CFLAGS := -Wall -Wextra -Werror -g -std=c99 $(CFLAGS)
+CPPFLAGS := -I../include @EMBODY_CFLAGS@ @SDS_CFLAGS@ @LIBTAP13_CFLAGS@ $(CPPFLAGS)
+LDFLAGS := @EMBODY_LIBS@ @SDS_LIBS@ @LIBTAP13_LIBS@ $(LDFLAGS)
+
+PROGRAMS := $(patsubst %.c,%,$(wildcard *.c))
+
+all: $(PROGRAMS)
+
+$(PROGRAMS): % : %.o ../src/$(LIBRARY_NAME)
+	$(LIBTOOL) --mode=link $(CC) $(LDFLAGS) -o $@ $^
+
+%.o: %.c ../src/$(LIBRARY_NAME)
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
+
+clean:
+	rm -rf *.o .libs $(PROGRAMS)
