@@ -38,7 +38,7 @@ void cim_initialize(void);
 	void *cim_callback; \
 	emb_type_t *cim_emb_type = emb_type_get(type_name); \
 	if ((cim_callback = emb_type_get_callback(cim_emb_type, "new"))) { \
-		cim_new_ret = emb_new(type_name, \
+		cim_new_ret = emb_container_new(cim_emb_type, \
 			cim_call_callback(cim_callback, __VA_ARGS__)); \
 	} \
 	cim_new_ret; \
