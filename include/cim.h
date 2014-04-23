@@ -29,14 +29,14 @@ void cim_initialize(void);
 	&((__typeof__(data)){data})
 
 #define snew(type_name, data) \
-	emb_snew(type_name, data)
+	emb_snew(#type_name, data)
 
 #define $(...) snew(__VA_ARGS__)
 
 #define new(type_name, ...) ({ \
 	void *cim_new_ret = NULL; \
 	void *cim_callback; \
-	emb_type_t *cim_emb_type = emb_type_get(type_name); \
+	emb_type_t *cim_emb_type = emb_type_get(#type_name); \
 	if ((cim_callback = emb_type_get_callback(cim_emb_type, "new"))) { \
 		cim_new_ret = emb_container_new(cim_emb_type, \
 			cim_call_callback(cim_callback, __VA_ARGS__)); \

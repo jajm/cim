@@ -21,41 +21,53 @@
 #include <embody/embody.h>
 #include <sds.h>
 
-static int * cim_int_new(int i)
-{
-	int *j;
+#define cim_new_func(type_name, type) \
+	static type * cim_##type_name##_new(type data) \
+	{ \
+		type *data_ptr; \
+		data_ptr = malloc(sizeof(type)); \
+		if (!data_ptr) return NULL; \
+		*data_ptr = data; \
+		return data_ptr; \
+	}
 
-	j = malloc(sizeof(int));
-	if (!j) return NULL;
+cim_new_func(Short, short)
+cim_new_func(Int, int)
+cim_new_func(Long, long)
+cim_new_func(LongLong, long long)
+cim_new_func(UShort, unsigned short)
+cim_new_func(UInt, unsigned int)
+cim_new_func(ULong, unsigned long)
+cim_new_func(ULongLong, unsigned long long)
 
-	*j = i;
+cim_new_func(Float, float)
+cim_new_func(Double, double)
+cim_new_func(LongDouble, long double)
 
-	return j;
-}
-
-static double * cim_double_new(double d)
-{
-	double *e;
-
-	e = malloc(sizeof(double));
-	if (!e) return NULL;
-
-	*e = d;
-
-	return e;
-}
+#define cim_define_type(type_name) \
+	type_name##_type = emb_type_get(#type_name); \
+	emb_type_register_callback(type_name##_type, "new", cim_##type_name##_new); \
+	emb_type_register_callback(type_name##_type, "free", free)
 
 void cim_initialize(void)
 {
-	emb_type_t *Int_type, *Double_type, *String_type;
+	emb_type_t *Short_type, *Int_type, *Long_type, *LongLong_type,
+		*UShort_type, *UInt_type, *ULong_type, *ULongLong_type,
+		*Float_type, *Double_type, *LongDouble_type,
+		*String_type;
 
-	Int_type = emb_type_get("Int");
-	emb_type_register_callback(Int_type, "new", cim_int_new);
-	emb_type_register_callback(Int_type, "free", free);
+	cim_define_type(Short);
+	cim_define_type(Int);
+	cim_define_type(Long);
+	cim_define_type(LongLong);
+	cim_define_type(UShort);
+	cim_define_type(UInt);
+	cim_define_type(ULong);
+	cim_define_type(ULongLong);
 
-	Double_type = emb_type_get("Double");
-	emb_type_register_callback(Double_type, "new", cim_double_new);
-	emb_type_register_callback(Double_type, "free", free);
+	cim_define_type(Float);
+	cim_define_type(Double);
+	cim_define_type(LongDouble);
 
 	String_type = emb_type_get("String");
 	emb_type_register_callback(String_type, "new", sdsnew);
