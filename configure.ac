@@ -13,6 +13,7 @@ AC_CHECK_HEADERS([stdlib.h stdio.h string.h stdbool.h])
 
 PKG_CHECK_MODULES(EMBODY, [embody >= 1.2])
 PKG_CHECK_MODULES(SDS, [sds])
+PKG_CHECK_MODULES(LIBGENDS, [libgends >= 2])
 
 BUILD_TESTS=no
 PKG_CHECK_MODULES(LIBTAP13, [libtap13], [BUILD_TESTS=yes], [BUILD_TESTS=no])
